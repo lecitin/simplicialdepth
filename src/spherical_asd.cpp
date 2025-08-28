@@ -180,7 +180,7 @@ double spherical_asd_wrapper(NumericVector ray_vec, NumericMatrix P_mat) {
 
     long long result = spherical_asd(ray, P);
 
-    return static_cast<double>(result);
+    return static_cast<double>(result) / combinations(n,3);
 }
 
 // int main() {

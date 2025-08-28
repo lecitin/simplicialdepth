@@ -203,14 +203,15 @@ DataFrame circular_asd_all_points_wrapper(NumericMatrix points_mat) {
 
     std::vector<Arc> arcs = circular_asd_01_all_points(points_vec);
 
+    long long combs = combinations(n, 2);
+
     // Convert std::vector<Arc> to DataFrame
     int m = arcs.size();
-    NumericVector start_angles(m), end_angles(m);
-    IntegerVector depths(m);
+    NumericVector start_angles(m), end_angles(m), depths(m);
     for (int i = 0; i < m; i++) {
         start_angles[i] = arcs[i].left_angle;
         end_angles[i]   = arcs[i].right_angle;
-        depths[i]       = arcs[i].depth;
+        depths[i]       = static_cast<double>(arcs[i].depth) / combs;
     }
 
     return DataFrame::create(

@@ -106,7 +106,7 @@ double SDk_wrapper(NumericMatrix Xinput_mat, NumericVector x_vec, int k) {
 
     long long result = SDk(Xinput, x, k);
 
-    return static_cast<double>(result); // R does not have long long
+    return static_cast<double>(result) / combinations(n, k); // R does not have long long
 }
 
 long long SDk_parallel(const std::vector<Point3D>& Xinput, const Point3D& x, int k) {
@@ -224,5 +224,5 @@ double SDk_parallel_wrapper(NumericMatrix Xinput_mat, NumericVector x_vec, int k
 
     long long result = SDk_parallel(Xinput, x, k);
 
-    return static_cast<double>(result); // R does not have long long
+    return static_cast<double>(result) / combinations(n, k); // R does not have long long
 }

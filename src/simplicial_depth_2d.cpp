@@ -39,11 +39,6 @@ long long simplicial_depth_2d(Point2D q, const std::vector<Point2D>& points) {
     return combinations(m, 3) - non_containing_triangles;
 }
 
-#include <Rcpp.h>
-#include "helpers.h"  // contains Point2D and simplicial_depth_2d
-
-using namespace Rcpp;
-
 // [[Rcpp::export]]
 double simplicial_depth_2d_wrapper(NumericVector q_vec, NumericMatrix points_mat) {
     int n = points_mat.nrow();
@@ -63,5 +58,5 @@ double simplicial_depth_2d_wrapper(NumericVector q_vec, NumericMatrix points_mat
 
     long long result = simplicial_depth_2d(q, points);
 
-    return static_cast<double>(result);
+    return static_cast<double>(result) / combinations(n, 3);
 }
