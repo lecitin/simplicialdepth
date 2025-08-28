@@ -1,8 +1,10 @@
+#include <Rcpp.h>
 #include "helpers.h"
 #include "load_points.h"
 #include <cassert>
 #include <random>
 #include <chrono>
+using namespace Rcpp;
 
 // Helper struct for sorting 2D points by angle
 struct Point2D_indexed {
@@ -67,7 +69,6 @@ long long circular_asd(Point2D ray, const std::vector<Point2D>& points) {
 }
 
 // An O(n log(n)) algorithm for angular simplicial depth based on the 01 sequence method
-// [[Rcpp::export]]
 long long circular_asd_01(Point2D ray, const std::vector<Point2D>& points) {
     int m = points.size();
     if (m < 2) return 0;
@@ -107,9 +108,18 @@ long long circular_asd_01(Point2D ray, const std::vector<Point2D>& points) {
     return subsequences_10;
 }
 
+// [[Rcpp::export]]
+long long circular_asd_wrapper(NumericMatrix X, NumericVector q) {
+    int n = X.nrow();
+    std::vector<Point2D> P(n);
+    for (int i=0; i<n; i++) {
+        P.push_back({X(i,0), X(i,1)});
+    }
+    Point2D xx = {q[0], q[1]};
+    return circular_asd_01(xx, P);
+}
 
 // An O(n log(n)) algorithm for angular simplicial depth based on the 01 sequence method
-// [[Rcpp::export]]
 std::vector<Arc> circular_asd_01_all_points(const std::vector<Point2D>& points) {
     int m = points.size();
     std::vector<Arc> arcs(m);
@@ -179,6 +189,37 @@ std::vector<Arc> circular_asd_01_all_points(const std::vector<Point2D>& points) 
     
     return arcs;
 }
+
+// [[Rcpp::export]]
+DataFrame circular_asd_all_points_wrapper(NumericMatrix points_mat) {
+    int n = points_mat.nrow();
+    std::vector<Point2D> points_vec(n);
+
+    // Convert matrix to std::vector<Point2D>
+    for (int i = 0; i < n; i++) {
+        points_vec[i].x = points_mat(i, 0);
+        points_vec[i].y = points_mat(i, 1);
+    }
+
+    std::vector<Arc> arcs = circular_asd_01_all_points(points_vec);
+
+    // Convert std::vector<Arc> to DataFrame
+    int m = arcs.size();
+    NumericVector start_angles(m), end_angles(m);
+    IntegerVector depths(m);
+    for (int i = 0; i < m; i++) {
+        start_angles[i] = arcs[i].left_angle;
+        end_angles[i]   = arcs[i].right_angle;
+        depths[i]       = arcs[i].depth;
+    }
+
+    return DataFrame::create(
+        Named("start") = start_angles,
+        Named("end")   = end_angles,
+        Named("depth") = depths
+    );
+}
+
 //
 // int main() {
 //

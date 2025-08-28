@@ -1,12 +1,13 @@
+#include <Rcpp.h>
 #include "helpers.h"
 #include "load_points.h"
 #include "simplicial_depth_2d.h"
 #include "simplicial_depth_bruteforce.h"
 #include <cmath>
 #include <cassert>
+using namespace Rcpp;
 
 // The main algorithm for fast 3D angular simplicial depth
-// [[Rcpp::export]]
 long long spherical_asd(Point3D ray, const std::vector<Point3D>& P) {
     int n = P.size();
     if (n < 3) return 0;
@@ -158,6 +159,29 @@ long long spherical_asd(Point3D ray, const std::vector<Point3D>& P) {
         }
     }
     return N1 + N2 + N3;
+}
+
+// [[Rcpp::export]]
+double spherical_asd_wrapper(NumericVector ray_vec, NumericMatrix P_mat) {
+    int n = P_mat.nrow();
+    if (P_mat.ncol() != 3 || ray_vec.size() != 3) {
+        stop("P must be n x 3 and ray must be length 3");
+    }
+
+    // Convert matrix to std::vector<Point3D>
+    std::vector<Point3D> P(n);
+    for (int i = 0; i < n; i++) {
+        P[i].x = P_mat(i, 0);
+        P[i].y = P_mat(i, 1);
+        P[i].z = P_mat(i, 2);
+    }
+
+    // Convert vector to Point3D
+    Point3D ray = { ray_vec[0], ray_vec[1], ray_vec[2] };
+
+    long long result = spherical_asd(ray, P);
+
+    return static_cast<double>(result);
 }
 
 // int main() {

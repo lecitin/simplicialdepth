@@ -1,7 +1,8 @@
+#include <Rcpp.h>
+using namespace Rcpp;
 #include "helpers.h"
 
 // An O(n log(n)) algorithm for regular simplicial depth
-// [[Rcpp::export]]
 long long simplicial_depth_2d(Point2D q, const std::vector<Point2D>& points) {
     int m = points.size();
     if (m < 3) return 0;
@@ -36,4 +37,31 @@ long long simplicial_depth_2d(Point2D q, const std::vector<Point2D>& points) {
     }
 
     return combinations(m, 3) - non_containing_triangles;
+}
+
+#include <Rcpp.h>
+#include "helpers.h"  // contains Point2D and simplicial_depth_2d
+
+using namespace Rcpp;
+
+// [[Rcpp::export]]
+double simplicial_depth_2d_wrapper(NumericVector q_vec, NumericMatrix points_mat) {
+    int n = points_mat.nrow();
+    if (points_mat.ncol() != 2 || q_vec.size() != 2) {
+        stop("points must be n x 2 and q must be length 2");
+    }
+
+    // Convert matrix to std::vector<Point2D>
+    std::vector<Point2D> points(n);
+    for (int i = 0; i < n; i++) {
+        points[i].x = points_mat(i, 0);
+        points[i].y = points_mat(i, 1);
+    }
+
+    // Convert vector to Point2D
+    Point2D q = { q_vec[0], q_vec[1] };
+
+    long long result = simplicial_depth_2d(q, points);
+
+    return static_cast<double>(result);
 }

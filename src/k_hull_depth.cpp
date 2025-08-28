@@ -1,8 +1,9 @@
+#include <Rcpp.h>
+using namespace Rcpp;
 #include "helpers.h"
 #include "load_points.h"
 #include <cassert>
 
-// [[Rcpp::export]]
 long long SDk(const std::vector<Point3D>& Xinput, const Point3D& x, int k) {
     int n = Xinput.size();
     std::vector<Point3D> X;
@@ -86,6 +87,28 @@ long long SDk(const std::vector<Point3D>& Xinput, const Point3D& x, int k) {
 }
 
 // [[Rcpp::export]]
+double SDk_wrapper(NumericMatrix Xinput_mat, NumericVector x_vec, int k) {
+    int n = Xinput_mat.nrow();
+    if (Xinput_mat.ncol() != 3 || x_vec.size() != 3) {
+        stop("Xinput must be n x 3 and x must be length 3");
+    }
+
+    // Convert matrix to std::vector<Point3D>
+    std::vector<Point3D> Xinput(n);
+    for (int i = 0; i < n; i++) {
+        Xinput[i].x = Xinput_mat(i, 0);
+        Xinput[i].y = Xinput_mat(i, 1);
+        Xinput[i].z = Xinput_mat(i, 2);
+    }
+
+    // Convert vector to Point3D
+    Point3D x = { x_vec[0], x_vec[1], x_vec[2] };
+
+    long long result = SDk(Xinput, x, k);
+
+    return static_cast<double>(result); // R does not have long long
+}
+
 long long SDk_parallel(const std::vector<Point3D>& Xinput, const Point3D& x, int k) {
     int n = Xinput.size();
     std::vector<Point3D> X;
@@ -179,4 +202,27 @@ long long SDk_parallel(const std::vector<Point3D>& Xinput, const Point3D& x, int
 
     SDk -= SUM / 4;
     return SDk;
+}
+
+// [[Rcpp::export]]
+double SDk_parallel_wrapper(NumericMatrix Xinput_mat, NumericVector x_vec, int k) {
+    int n = Xinput_mat.nrow();
+    if (Xinput_mat.ncol() != 3 || x_vec.size() != 3) {
+        stop("Xinput must be n x 3 and x must be length 3");
+    }
+
+    // Convert matrix to std::vector<Point3D>
+    std::vector<Point3D> Xinput(n);
+    for (int i = 0; i < n; i++) {
+        Xinput[i].x = Xinput_mat(i, 0);
+        Xinput[i].y = Xinput_mat(i, 1);
+        Xinput[i].z = Xinput_mat(i, 2);
+    }
+
+    // Convert vector to Point3D
+    Point3D x = { x_vec[0], x_vec[1], x_vec[2] };
+
+    long long result = SDk_parallel(Xinput, x, k);
+
+    return static_cast<double>(result); // R does not have long long
 }
