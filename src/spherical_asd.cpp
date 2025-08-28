@@ -118,7 +118,6 @@ long long spherical_asd(Point3D ray, const std::vector<Point3D>& P) {
     long long N3 = 0;
     #pragma omp for schedule(dynamic)
     for (const auto& blue_point : P_blue) {
-        long long N3_b = 0;
         // Rotate all red points counterclockwise so that the blue point Blue[b,] ends up on the negative x-axis
         double theta = atan2(blue_point.y, blue_point.x);
         double alpha = M_PI - theta;
