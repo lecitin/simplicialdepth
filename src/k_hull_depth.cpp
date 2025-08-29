@@ -205,9 +205,9 @@ long long SDk_parallel(const std::vector<Point3D>& Xinput, const Point3D& x, int
 }
 
 // [[Rcpp::export]]
-double SDk_parallel_wrapper(NumericMatrix Xinput_mat, NumericVector x_vec, int k) {
+double SDk_parallel_wrapper(NumericMatrix Xinput_mat, NumericVector q, int k) {
     int n = Xinput_mat.nrow();
-    if (Xinput_mat.ncol() != 3 || x_vec.size() != 3) {
+    if (Xinput_mat.ncol() != 3 || q.size() != 3) {
         stop("Xinput must be n x 3 and x must be length 3");
     }
 
@@ -220,7 +220,7 @@ double SDk_parallel_wrapper(NumericMatrix Xinput_mat, NumericVector x_vec, int k
     }
 
     // Convert vector to Point3D
-    Point3D x = { x_vec[0], x_vec[1], x_vec[2] };
+    Point3D x = { q[0], q[1], q[2] };
 
     long long result = SDk_parallel(Xinput, x, k);
 

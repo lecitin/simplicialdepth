@@ -40,7 +40,7 @@ long long simplicial_depth_2d(Point2D q, const std::vector<Point2D>& points) {
 }
 
 // [[Rcpp::export]]
-double simplicial_depth_2d_wrapper(NumericVector q_vec, NumericMatrix points_mat) {
+double simplicial_depth_2d_wrapper(NumericMatrix points_mat, NumericVector q_vec) {
     int n = points_mat.nrow();
     if (points_mat.ncol() != 2 || q_vec.size() != 2) {
         stop("points must be n x 2 and q must be length 2");
