@@ -1,6 +1,5 @@
 #include <Rcpp.h>
 #include "helpers.h"
-#include "load_points.h"
 #include <cassert>
 #include <random>
 #include <chrono>

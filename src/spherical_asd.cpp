@@ -1,6 +1,5 @@
 #include <Rcpp.h>
 #include "helpers.h"
-#include "load_points.h"
 #include "simplicial_depth_2d.h"
 #include "simplicial_depth_bruteforce.h"
 #include <cmath>

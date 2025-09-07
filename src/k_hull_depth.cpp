@@ -1,7 +1,6 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 #include "helpers.h"
-#include "load_points.h"
 #include <cassert>
 
 long long SDk(const std::vector<Point3D>& Xinput, const Point3D& x, int k) {
