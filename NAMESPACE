@@ -1,6 +1,6 @@
 useDynLib(simplicialdepth, .registration = TRUE)
 importFrom(Rcpp, evalCpp)
-export(SDk
+export(SDk)
 export(SDk_parallel)
 export(circular_asd_all_arcs)
 export(circular_asd)
