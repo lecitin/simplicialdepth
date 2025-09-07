@@ -1,7 +1,6 @@
 #include <Rcpp.h>
 #include "helpers.h"
 #include "simplicial_depth_2d.h"
-#include "simplicial_depth_bruteforce.h"
 #include <cmath>
 #include <cassert>
 using namespace Rcpp;
