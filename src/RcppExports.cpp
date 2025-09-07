@@ -10,87 +10,87 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
-// circular_asd_wrapper
-long long circular_asd_wrapper(NumericMatrix X, NumericVector ray);
-RcppExport SEXP _simplicialdepth_circular_asd_wrapper(SEXP XSEXP, SEXP raySEXP) {
+// circular_asd
+long long circular_asd(NumericMatrix X, NumericVector ray);
+RcppExport SEXP _simplicialdepth_circular_asd(SEXP XSEXP, SEXP raySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericMatrix >::type X(XSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type ray(raySEXP);
-    rcpp_result_gen = Rcpp::wrap(circular_asd_wrapper(X, ray));
+    rcpp_result_gen = Rcpp::wrap(circular_asd(X, ray));
     return rcpp_result_gen;
 END_RCPP
 }
-// circular_asd_all_arcs_wrapper
-DataFrame circular_asd_all_arcs_wrapper(NumericMatrix points_mat);
-RcppExport SEXP _simplicialdepth_circular_asd_all_arcs_wrapper(SEXP points_matSEXP) {
+// circular_asd_all_arcs
+DataFrame circular_asd_all_arcs(NumericMatrix points_mat);
+RcppExport SEXP _simplicialdepth_circular_asd_all_arcs(SEXP points_matSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericMatrix >::type points_mat(points_matSEXP);
-    rcpp_result_gen = Rcpp::wrap(circular_asd_all_arcs_wrapper(points_mat));
+    rcpp_result_gen = Rcpp::wrap(circular_asd_all_arcs(points_mat));
     return rcpp_result_gen;
 END_RCPP
 }
-// SDk_wrapper
-double SDk_wrapper(NumericMatrix Xinput_mat, NumericVector x_vec, int k);
-RcppExport SEXP _simplicialdepth_SDk_wrapper(SEXP Xinput_matSEXP, SEXP x_vecSEXP, SEXP kSEXP) {
+// SDk
+double SDk(NumericMatrix Xinput_mat, NumericVector x_vec, int k);
+RcppExport SEXP _simplicialdepth_SDk(SEXP Xinput_matSEXP, SEXP x_vecSEXP, SEXP kSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericMatrix >::type Xinput_mat(Xinput_matSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type x_vec(x_vecSEXP);
     Rcpp::traits::input_parameter< int >::type k(kSEXP);
-    rcpp_result_gen = Rcpp::wrap(SDk_wrapper(Xinput_mat, x_vec, k));
+    rcpp_result_gen = Rcpp::wrap(SDk(Xinput_mat, x_vec, k));
     return rcpp_result_gen;
 END_RCPP
 }
-// SDk_parallel_wrapper
-double SDk_parallel_wrapper(NumericMatrix Xinput_mat, NumericVector q, int k);
-RcppExport SEXP _simplicialdepth_SDk_parallel_wrapper(SEXP Xinput_matSEXP, SEXP qSEXP, SEXP kSEXP) {
+// SDk_parallel
+double SDk_parallel(NumericMatrix Xinput_mat, NumericVector q, int k);
+RcppExport SEXP _simplicialdepth_SDk_parallel(SEXP Xinput_matSEXP, SEXP qSEXP, SEXP kSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericMatrix >::type Xinput_mat(Xinput_matSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type q(qSEXP);
     Rcpp::traits::input_parameter< int >::type k(kSEXP);
-    rcpp_result_gen = Rcpp::wrap(SDk_parallel_wrapper(Xinput_mat, q, k));
+    rcpp_result_gen = Rcpp::wrap(SDk_parallel(Xinput_mat, q, k));
     return rcpp_result_gen;
 END_RCPP
 }
-// simplicial_depth_2d_wrapper
-double simplicial_depth_2d_wrapper(NumericMatrix points_mat, NumericVector q_vec);
-RcppExport SEXP _simplicialdepth_simplicial_depth_2d_wrapper(SEXP points_matSEXP, SEXP q_vecSEXP) {
+// simplicial_depth_2d
+double simplicial_depth_2d(NumericMatrix points_mat, NumericVector q_vec);
+RcppExport SEXP _simplicialdepth_simplicial_depth_2d(SEXP points_matSEXP, SEXP q_vecSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericMatrix >::type points_mat(points_matSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type q_vec(q_vecSEXP);
-    rcpp_result_gen = Rcpp::wrap(simplicial_depth_2d_wrapper(points_mat, q_vec));
+    rcpp_result_gen = Rcpp::wrap(simplicial_depth_2d(points_mat, q_vec));
     return rcpp_result_gen;
 END_RCPP
 }
-// spherical_asd_wrapper
-double spherical_asd_wrapper(NumericMatrix P_mat, NumericVector ray_vec);
-RcppExport SEXP _simplicialdepth_spherical_asd_wrapper(SEXP P_matSEXP, SEXP ray_vecSEXP) {
+// spherical_asd
+double spherical_asd(NumericMatrix P_mat, NumericVector ray_vec);
+RcppExport SEXP _simplicialdepth_spherical_asd(SEXP P_matSEXP, SEXP ray_vecSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericMatrix >::type P_mat(P_matSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type ray_vec(ray_vecSEXP);
-    rcpp_result_gen = Rcpp::wrap(spherical_asd_wrapper(P_mat, ray_vec));
+    rcpp_result_gen = Rcpp::wrap(spherical_asd(P_mat, ray_vec));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_simplicialdepth_circular_asd_wrapper", (DL_FUNC) &_simplicialdepth_circular_asd_wrapper, 2},
-    {"_simplicialdepth_circular_asd_all_arcs_wrapper", (DL_FUNC) &_simplicialdepth_circular_asd_all_arcs_wrapper, 1},
-    {"_simplicialdepth_SDk_wrapper", (DL_FUNC) &_simplicialdepth_SDk_wrapper, 3},
-    {"_simplicialdepth_SDk_parallel_wrapper", (DL_FUNC) &_simplicialdepth_SDk_parallel_wrapper, 3},
-    {"_simplicialdepth_simplicial_depth_2d_wrapper", (DL_FUNC) &_simplicialdepth_simplicial_depth_2d_wrapper, 2},
-    {"_simplicialdepth_spherical_asd_wrapper", (DL_FUNC) &_simplicialdepth_spherical_asd_wrapper, 2},
+    {"_simplicialdepth_circular_asd", (DL_FUNC) &_simplicialdepth_circular_asd, 2},
+    {"_simplicialdepth_circular_asd_all_arcs", (DL_FUNC) &_simplicialdepth_circular_asd_all_arcs, 1},
+    {"_simplicialdepth_SDk", (DL_FUNC) &_simplicialdepth_SDk, 3},
+    {"_simplicialdepth_SDk_parallel", (DL_FUNC) &_simplicialdepth_SDk_parallel, 3},
+    {"_simplicialdepth_simplicial_depth_2d", (DL_FUNC) &_simplicialdepth_simplicial_depth_2d, 2},
+    {"_simplicialdepth_spherical_asd", (DL_FUNC) &_simplicialdepth_spherical_asd, 2},
     {NULL, NULL, 0}
 };
 

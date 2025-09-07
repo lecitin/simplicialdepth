@@ -109,7 +109,7 @@ long long circular_asd_01(Point2D ray, const std::vector<Point2D>& points) {
 }
 
 // [[Rcpp::export]]
-long long circular_asd_wrapper(NumericMatrix X, NumericVector ray) {
+long long circular_asd(NumericMatrix X, NumericVector ray) {
     int n = X.nrow();
     std::vector<Point2D> P(n);
     for (int i=0; i<n; i++) {
@@ -191,7 +191,7 @@ std::vector<Arc> circular_asd_01_all_points(const std::vector<Point2D>& points) 
 }
 
 // [[Rcpp::export]]
-DataFrame circular_asd_all_arcs_wrapper(NumericMatrix points_mat) {
+DataFrame circular_asd_all_arcs(NumericMatrix points_mat) {
     int n = points_mat.nrow();
     std::vector<Point2D> points_vec(n);
 

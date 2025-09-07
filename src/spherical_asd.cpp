@@ -161,7 +161,7 @@ long long spherical_asd(Point3D ray, const std::vector<Point3D>& P) {
 }
 
 // [[Rcpp::export]]
-double spherical_asd_wrapper(NumericMatrix P_mat, NumericVector ray_vec) {
+double spherical_asd(NumericMatrix P_mat, NumericVector ray_vec) {
     int n = P_mat.nrow();
     if (P_mat.ncol() != 3 || ray_vec.size() != 3) {
         stop("P must be n x 3 and ray must be length 3");
