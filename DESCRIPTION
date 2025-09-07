@@ -2,8 +2,8 @@ Package: simplicialdepth
 Type: Package
 Title: Fast simplicial and angular simplicial depth calculation
 Version: 0.1.0
-Authors: Bc. Marek Hubar, Bc. Erik Mendros
-Maintainer: Marek Hubar
+Authors: Marek Hubar, Erik Mendros
+Maintainer: Marek Hubar <24818710@cuni.cz>
 Description: Rcpp + OpenMP implementation of some depth functions.
 Imports: Rcpp
 LinkingTo: Rcpp
