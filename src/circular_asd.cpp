@@ -11,6 +11,7 @@ struct Point2D_indexed {
     double angle;
     double angle_mod_PI;
     bool label;
+    int original_index;
 };
 
 // An O(n log(n)) algorithm for angular simplicial depth
@@ -137,6 +138,7 @@ std::vector<Arc> circular_asd_01_all_points(const std::vector<Point2D>& points) 
         sorted_2d_points[i].label = (sorted_2d_points[i].angle < M_PI);
         // Angles modulo PI
         sorted_2d_points[i].angle_mod_PI = sorted_2d_points[i].angle < M_PI ? sorted_2d_points[i].angle : sorted_2d_points[i].angle - M_PI;
+        sorted_2d_points[i].original_index = i;
         angles[i] = sorted_2d_points[i].angle;
     }
 
@@ -181,9 +183,12 @@ std::vector<Arc> circular_asd_01_all_points(const std::vector<Point2D>& points) 
 
     #pragma omp parallel for schedule(static)
     for (int i=0; i<m; i++) {
-        arcs[i].left_angle = angles[mod(i-1,m)],
-        arcs[i].right_angle = angles[i],
-        arcs[i].depth = N10s[i];
+        int orig_index = sorted_2d_points[i].original_index;
+        arcs[orig_index].left_angle = angles[mod(i-1,m)],
+        arcs[orig_index].right_angle = angles[i],
+        arcs[orig_index].depth = N10s[i],
+        arcs[orig_index].right_point_depth = (N10s[i] + N10s[mod(i+1,m)] - m + 1) / 2;
+        arcs[orig_index].right_point = sorted_2d_points[i].p;
     }
     
     return arcs;
@@ -206,75 +211,23 @@ DataFrame circular_asd_all_arcs(NumericMatrix points_mat) {
 
     // Convert std::vector<Arc> to DataFrame
     int m = arcs.size();
-    NumericVector start_angles(m), end_angles(m), depths(m);
+    NumericVector start_angles(m), end_angles(m), right_points_x(m), right_points_y(m);
+    IntegerVector depths(m), right_point_depths(m);
     for (int i = 0; i < m; i++) {
-        start_angles[i] = arcs[i].left_angle;
-        end_angles[i]   = arcs[i].right_angle;
-        depths[i]       = static_cast<double>(arcs[i].depth) / combs;
+        start_angles[i]       = arcs[i].left_angle;
+        end_angles[i]         = arcs[i].right_angle;
+        depths[i]             = arcs[i].depth;
+        right_point_depths[i] = arcs[i].right_point_depth;
+        right_points_x[i]     = arcs[i].right_point.x;
+        right_points_y[i]     = arcs[i].right_point.y;
     }
 
     return DataFrame::create(
         Named("start") = start_angles,
         Named("end")   = end_angles,
-        Named("depth") = depths
+        Named("depth") = depths,
+        Named("end_point_depth") = right_point_depths,
+        Named("right_point_x") = right_points_x,
+        Named("right_point_y") = right_points_y
     );
 }
-
-//
-// int main() {
-//
-//     unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-//     std::mt19937 rng(seed); // Mersenne Twister engine
-//
-//     // Define a uniform distribution for coordinates between min_coord and max_coord
-//     std::uniform_real_distribution<double> dist(0.0, 2*M_PI - EPS);
-//
-//     int m = 1000000;
-//
-//     // Generate a random ray (point where we want to calculate the ASD)
-//     // double q_angle = dist(rng);
-//     double q_angle = 0.0;
-//     Point2D q = {cos(q_angle), sin(q_angle)};
-//
-//     // Generate the circular data
-//     std::vector<Point2D> points2d = generateRandomUnitVectors2D(m, 4.0, 2.0);
-//
-//     // Time the brute force algorithm
-//     auto brute_start = std::chrono::high_resolution_clock::now();
-//     long long brute=0;
-//     brute = circular_asd_01(q, points2d);
-//     // for (int i=0; i<m-1; i++) circular_asd(q, points2d);
-//     auto brute_stop = std::chrono::high_resolution_clock::now();
-//
-//     // Time the fast algorithm
-//     auto fast_start = std::chrono::high_resolution_clock::now();
-//     // std::vector<Arc> ASD_fast = circular_asd_01_all_points(points2d);
-//     // long long fast = ASD[0].depth;
-//     long long fast = circular_asd(q, points2d);
-//     auto fast_stop = std::chrono::high_resolution_clock::now();
-//
-//     // Compare the two results
-//     if (brute != fast) std::cout << "Brute: " << brute << std::endl << "Fast: " << fast << std::endl;
-//     assert(brute == fast);
-//     
-//     // Average the computation time of each algorithm
-//     std::chrono::duration<double, std::milli> brute_time = brute_stop - brute_start;
-//     std::chrono::duration<double, std::milli> fast_time = fast_stop - fast_start;
-//
-//     std::cout << "Bruteforce time: " << brute_time.count() << "ms\n";
-//     std::cout << "Fast algorithm time: " << fast_time.count() << "ms\n";
-//
-//     std::cout << std::endl;
-//     // Find arcs with min and max depth
-//     // Arc min_arc = *std::min_element(ASD_fast.begin(), ASD_fast.end(),
-//     //     [](const Arc& a, const Arc& b){ return a.depth < b.depth; });
-//     // Arc max_arc = *std::max_element(ASD_fast.begin(), ASD_fast.end(),
-//     //     [](const Arc& a, const Arc& b){ return a.depth < b.depth; });
-//
-//
-//     // Print the min and max depth arc midpoints
-//     // std::cout << "Angle min: " << "(" << cos(min_arc.mid_point()) << ", " << sin(min_arc.mid_point()) << ")" << ", depth: " << double(min_arc.depth) / double(combinations(m,2)) << std::endl;
-//     // std::cout << "Angle max: " << "(" << cos(max_arc.mid_point()) << ", " << sin(max_arc.mid_point()) << ")" << ", depth: " << double(max_arc.depth) / double(combinations(m,2)) << std::endl;
-//     
-//     return 0;
-// }

@@ -34,7 +34,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // SDk
-double SDk(NumericMatrix Xinput_mat, NumericVector x_vec, int k);
+long long SDk(NumericMatrix Xinput_mat, NumericVector x_vec, int k);
 RcppExport SEXP _simplicialdepth_SDk(SEXP Xinput_matSEXP, SEXP x_vecSEXP, SEXP kSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -47,7 +47,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // SDk_parallel
-double SDk_parallel(NumericMatrix Xinput_mat, NumericVector q, int k);
+long long SDk_parallel(NumericMatrix Xinput_mat, NumericVector q, int k);
 RcppExport SEXP _simplicialdepth_SDk_parallel(SEXP Xinput_matSEXP, SEXP qSEXP, SEXP kSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -60,7 +60,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // simplicial_depth_2d
-double simplicial_depth_2d(NumericMatrix points_mat, NumericVector q_vec);
+long long simplicial_depth_2d(NumericMatrix points_mat, NumericVector q_vec);
 RcppExport SEXP _simplicialdepth_simplicial_depth_2d(SEXP points_matSEXP, SEXP q_vecSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -72,7 +72,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // spherical_asd
-double spherical_asd(NumericMatrix P_mat, NumericVector ray_vec);
+long long spherical_asd(NumericMatrix P_mat, NumericVector ray_vec);
 RcppExport SEXP _simplicialdepth_spherical_asd(SEXP P_matSEXP, SEXP ray_vecSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;

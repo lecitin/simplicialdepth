@@ -9,6 +9,7 @@ long long SDk(const std::vector<Point3D>& Xinput, const Point3D& x, int k) {
     X.reserve(n);
     for (const auto& p : Xinput) {
         Point3D q{p.x - x.x, p.y - x.y, p.z - x.z};
+        if (fabs(q.y) < EPS) q.y = EPS;
         if (fabs(q.x) > EPS) X.push_back(q);
     }
     n = (int)X.size();
@@ -86,7 +87,7 @@ long long SDk(const std::vector<Point3D>& Xinput, const Point3D& x, int k) {
 }
 
 // [[Rcpp::export]]
-double SDk(NumericMatrix Xinput_mat, NumericVector x_vec, int k) {
+long long SDk(NumericMatrix Xinput_mat, NumericVector x_vec, int k) {
     int n = Xinput_mat.nrow();
     if (Xinput_mat.ncol() != 3 || x_vec.size() != 3) {
         stop("Xinput must be n x 3 and x must be length 3");
@@ -103,9 +104,7 @@ double SDk(NumericMatrix Xinput_mat, NumericVector x_vec, int k) {
     // Convert vector to Point3D
     Point3D x = { x_vec[0], x_vec[1], x_vec[2] };
 
-    long long result = SDk(Xinput, x, k);
-
-    return static_cast<double>(result) / combinations(n, k); // R does not have long long
+    return SDk(Xinput, x, k);
 }
 
 long long SDk_parallel(const std::vector<Point3D>& Xinput, const Point3D& x, int k) {
@@ -114,10 +113,12 @@ long long SDk_parallel(const std::vector<Point3D>& Xinput, const Point3D& x, int
     X.reserve(n);
     for (const auto& p : Xinput) {
         Point3D q{p.x - x.x, p.y - x.y, p.z - x.z};
+        if (fabs(q.y) < EPS) q.y = EPS; // For sorting in the projection plane we must divide by q.y
         if (fabs(q.x) > EPS) X.push_back(q);
     }
     n = (int)X.size();
     if (n == 0 || k > n) return 0LL;
+
 
     struct HelperStruct {
         double x, y;
@@ -200,11 +201,12 @@ long long SDk_parallel(const std::vector<Point3D>& Xinput, const Point3D& x, int
     }
 
     SDk -= SUM / 4;
+    // std::cout << "SDk: " << SDk << std::endl;
     return SDk;
 }
 
 // [[Rcpp::export]]
-double SDk_parallel(NumericMatrix Xinput_mat, NumericVector q, int k) {
+long long SDk_parallel(NumericMatrix Xinput_mat, NumericVector q, int k) {
     int n = Xinput_mat.nrow();
     if (Xinput_mat.ncol() != 3 || q.size() != 3) {
         stop("Xinput must be n x 3 and x must be length 3");
@@ -221,7 +223,8 @@ double SDk_parallel(NumericMatrix Xinput_mat, NumericVector q, int k) {
     // Convert vector to Point3D
     Point3D x = { q[0], q[1], q[2] };
 
-    long long result = SDk_parallel(Xinput, x, k);
-
-    return static_cast<double>(result) / combinations(n, k); // R does not have long long
+    return SDk_parallel(Xinput, x, k);
 }
+
+
+

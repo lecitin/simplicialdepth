@@ -7,3 +7,4 @@ Maintainer: Marek Hubar <24818710@cuni.cz>
 Description: Rcpp + OpenMP implementation of some depth functions.
 Imports: Rcpp
 LinkingTo: Rcpp
+RoxygenNote: 7.3.2

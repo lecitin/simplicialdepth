@@ -40,7 +40,7 @@ long long simplicial_depth_2d(Point2D q, const std::vector<Point2D>& points) {
 }
 
 // [[Rcpp::export]]
-double simplicial_depth_2d(NumericMatrix points_mat, NumericVector q_vec) {
+long long simplicial_depth_2d(NumericMatrix points_mat, NumericVector q_vec) {
     int n = points_mat.nrow();
     if (points_mat.ncol() != 2 || q_vec.size() != 2) {
         stop("points must be n x 2 and q must be length 2");
@@ -56,7 +56,5 @@ double simplicial_depth_2d(NumericMatrix points_mat, NumericVector q_vec) {
     // Convert vector to Point2D
     Point2D q = { q_vec[0], q_vec[1] };
 
-    long long result = simplicial_depth_2d(q, points);
-
-    return static_cast<double>(result) / combinations(n, 3);
+    return simplicial_depth_2d(q, points);
 }

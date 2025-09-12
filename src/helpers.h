@@ -159,6 +159,8 @@ struct Arc {
     double left_angle;
     double right_angle;
     long long depth;
+    long long right_point_depth;
+    Point2D right_point;
 
     double mid_point() const {
         double mid = (left_angle + right_angle) / 2.0;
