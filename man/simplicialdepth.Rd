@@ -7,60 +7,36 @@
 simplicialdepth(X, x = NULL)
 }
 \arguments{
-\item{X}{A numeric matrix of size \eqn{n \times d} containing the sample 
-points, where each row is an observation and each column is a coordinate. 
-The dimension \eqn{d} must be either 2 or 3.}
+\item{X}{Numeric matrix of size \eqn{n \times d} containing sample points.}
 
-\item{x}{Optional. A query point or set of points:
-\itemize{
-  \item If `NULL` (default):
-    \itemize{
-      \item In 2D, computes the simplicial depth for each point in `X` 
-      with respect to the rest of the sample.
-      \item In 3D, computes the simplicial depth for each point in `X`, 
-      provided there are at least 5 sample points. If `n \le 4`, returns 
-      a zero vector of length `n`.
-    }
-  \item If a numeric vector of length \eqn{d}, computes the depth of this 
-    single point with respect to `X`.
-  \item If a numeric matrix with \eqn{d} columns, computes the depth of 
-    each row of `x` with respect to `X`.
-}}
+\item{x}{Optional. A query point or set of points (vector or matrix) with same column dimension as `X`.}
 }
 \value{
-A numeric vector of depths (one per query point or per row of `X`), 
-depending on the input.
+An object of class \code{depth_result} with components:
+\describe{
+  \item{depth}{Numeric vector of depths.}
+  \item{max_depth}{Maximum depth.}
+  \item{max_point}{Coordinates of the point with maximum depth.}
+  \item{max_index}{Index of the point with maximum depth.}
+}
 }
 \description{
-Computes the simplicial depth for 2D or 3D data, either for all points in a 
-sample or for user-specified query points.
+Computes the simplicial depth for 2D or 3D data, either for all points in a sample
+or for user-specified query points.
 }
 \details{
-In both 2D and 3D, depths are normalized by the corresponding binomial 
-coefficients:
+Depths are normalized by:
 \itemize{
-  \item In 2D: division by \eqn{choose(n-1, 3)} or \eqn{choose(n, 3)} 
-  depending on whether depths are computed for sample points or query points.
-  \item In 3D: division by \eqn{choose(n-1, 4)} or \eqn{choose(n, 4)}. 
+  \item 2D: \eqn{choose(n-1, 3)} for sample points, \eqn{choose(n, 3)} for query points.
+  \item 3D: \eqn{choose(n-1, 4)} for sample points, \eqn{choose(n, 4)} for query points.
 }
 }
 \examples{
-# Simulate some 2D data
-set.seed(123)
 X <- matrix(rnorm(20), ncol = 2)
-
-# Depths for each point in X
-simplicialdepth(X)
-
-# Depth for a single query point
-simplicialdepth(X, c(0,0))
-
-# Depths for multiple query points
-Y <- matrix(rnorm(6), ncol = 2)
-simplicialdepth(X, Y)
-
-# Simulate some 3D data
-X3 <- matrix(rnorm(30), ncol = 3)
-simplicialdepth(X3)  # depths for each point in X3
+result <- simplicialdepth(X)
+result$depth
+result$max_depth
+result$max_point
+result$max_index
 
 }

@@ -7,36 +7,24 @@
 angularsimplicialdepth(X, x = NULL)
 }
 \arguments{
-\item{X}{A numeric matrix of size \eqn{n \times d} containing the sample points, where each row is an observation and each column is a coordinate. 
-All points are first projected onto a unit circle/sphere and then containting arcs/spherical triangles are counted.
-The dimension \eqn{d} must be either 2 or 3.}
+\item{X}{A numeric matrix of size \eqn{n \times d} containing the sample points, 
+where each row is an observation and each column is a coordinate. 
+All points are projected onto a unit circle (2D) or sphere (3D) before depth computation.}
 
 \item{x}{Optional. A query point or set of points:
 \itemize{
-  \item If `NULL` (default):
-    \itemize{
-      \item In 2D, computes the angular simplicial depth for all points 
-      in `X`, along with arc depths and median information.
-      \item In 3D, computes the depth of each row of `X` with respect to 
-      the remaining points.
-    }
-  \item If a numeric vector of length \eqn{d}, computes the depth of this 
-    single point with respect to `X`.
-  \item If a numeric matrix with \eqn{d} columns, computes the depth of 
-    each row of `x` with respect to `X`.
+  \item If `NULL` (default): computes depths for all rows of `X`.
+  \item If a numeric vector of length \eqn{d}: computes the depth of this single point.
+  \item If a numeric matrix with \eqn{d} columns: computes depths for each row.
 }}
 }
 \value{
-A numeric value, numeric vector, or a list depending on the input:
-\itemize{
-  \item If `x` is `NULL` and \eqn{d=2}, returns a list with components:
-    \describe{
-      \item{arcs}{Data frame with arc depths and endpoint depths.}
-      \item{median_index}{Index of the point with maximum depth.}
-      \item{median}{The corresponding arc endpoint.}
-      \item{max_depth}{Maximum endpoint depth.}
-    }
-  \item Otherwise, returns a numeric value or vector of depths.
+An object of class \code{depth_result} with components:
+\describe{
+  \item{depth}{Numeric vector of depths for each query point or sample point.}
+  \item{max_depth}{Maximum depth observed.}
+  \item{max_point}{Coordinates of the point with maximum depth.}
+  \item{max_index}{Index of the point with maximum depth.}
 }
 }
 \description{
@@ -44,26 +32,19 @@ Computes the angular simplicial depth for 2D or 3D data, either for all
 points in a sample or for user-specified query points.
 }
 \details{
-In 2D, the function normalizes arc and endpoint depths by the appropriate
-binomial coefficients. It also identifies the point (the "median") with
-maximum angular simplicial depth.  
-
-In 3D, depths are normalized by \eqn{choose(n, 3)} or \eqn{choose(n-1, 3)} 
-depending on the case.
+Depths are normalized by appropriate binomial coefficients:
+\itemize{
+  \item In 2D: divide by \eqn{choose(n, 2)} for query points, \eqn{choose(n-1, 2)} for sample points.
+  \item In 3D: divide by \eqn{choose(n, 3)} or \eqn{choose(n-1, 3)}.
+}
+The function identifies the point with maximum depth.
 }
 \examples{
-# Simulate some 2D data
-set.seed(123)
 X <- matrix(rnorm(20), ncol = 2)
-
-# Depths for each point in X
-angularsimplicialdepth(X)
-
-# Depth for a single query point
-angularsimplicialdepth(X, c(0,0))
-
-# Depths for multiple query points
-Y <- matrix(rnorm(6), ncol = 2)
-angularsimplicialdepth(X, Y)
+result <- angularsimplicialdepth(X)
+result$depth       # depths of each point
+result$max_depth   # maximum depth
+result$max_point   # point with maximum depth
+result$max_index   # index of max depth
 
 }

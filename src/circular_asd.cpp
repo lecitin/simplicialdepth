@@ -207,8 +207,6 @@ DataFrame circular_asd_all_arcs(NumericMatrix points_mat) {
 
     std::vector<Arc> arcs = circular_asd_01_all_points(points_vec);
 
-    long long combs = combinations(n, 2);
-
     // Convert std::vector<Arc> to DataFrame
     int m = arcs.size();
     NumericVector start_angles(m), end_angles(m), right_points_x(m), right_points_y(m);

@@ -7,53 +7,35 @@
 khulldepth(X, x = NULL, k)
 }
 \arguments{
-\item{X}{A numeric matrix of size \eqn{n \times d} containing the sample 
-points, where each row is an observation and each column is a coordinate.}
+\item{X}{Numeric matrix of size \eqn{n \times d} containing sample points.}
 
-\item{x}{Optional. A query point or set of points:
-\itemize{
-  \item If `NULL` (default): computes the \eqn{k}-hull depth for each row 
-    of `X` with respect to the rest of the sample.
-  \item If a numeric vector of length \eqn{d}: computes the depth of this 
-    single point with respect to `X`.
-  \item If a numeric matrix with \eqn{d} columns: computes the depth of 
-    each row of `x` with respect to `X`.
-}}
+\item{x}{Optional. Query point(s) as a vector or matrix with same number of columns as `X`.}
 
-\item{k}{Integer, the hull size parameter. Must satisfy \eqn{k > d} and 
-\eqn{k \ge n} to yield nontrivial depths. If \eqn{k \le d} or 
-\eqn{k < n}, the function returns zero depths.}
+\item{k}{Integer, hull size parameter. Must satisfy \eqn{k > d} and \eqn{k \le n}.}
 }
 \value{
-A numeric vector of depths, one per query point (or one per row of 
-`X` if `x = NULL`). If `k \le d` or `k < n`, depths are identically zero.
+An object of class \code{depth_result} with components:
+\describe{
+  \item{depth}{Numeric vector of depths.}
+  \item{max_depth}{Maximum depth.}
+  \item{max_point}{Coordinates of the point with maximum depth.}
+  \item{max_index}{Index of the point with maximum depth.}
+}
 }
 \description{
-Computes the \eqn{k}-hull depth for 2D or 3D data (or higher dimensions), 
-either for all points in a sample or for user-specified query points.
+Computes the \eqn{k}-hull depth for 2D or 3D data, either for all points in a sample
+or for user-specified query points.
 }
 \details{
-The \eqn{k}-hull depth is a generalization of simplicial depth, replacing 
-simplices by convex hulls of size \eqn{k}. Depths are normalized by the 
-corresponding binomial coefficients:
-\itemize{
-  \item For sample points: division by \eqn{choose(n-1, k)}.
-  \item For query points: division by \eqn{choose(n, k)}.
-}
+Depths are normalized by \eqn{choose(n-1, k)} for sample points and
+\eqn{choose(n, k)} for query points. If \eqn{k \le d} or \eqn{k > n}, zero depths are returned.
 }
 \examples{
-# Simulate some 2D data
-set.seed(123)
 X <- matrix(rnorm(20), ncol = 2)
-
-# Depths for each point in X with k = 4
-khulldepth(X, k = 4)
-
-# Depth for a single query point
-khulldepth(X, c(0,0), k = 4)
-
-# Depths for multiple query points
-Y <- matrix(rnorm(6), ncol = 2)
-khulldepth(X, Y, k = 4)
+result <- khulldepth(X, k = 4)
+result$depth
+result$max_depth
+result$max_point
+result$max_index
 
 }
