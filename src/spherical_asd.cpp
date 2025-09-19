@@ -159,22 +159,21 @@ long long spherical_asd(Point3D ray, const std::vector<Point3D>& P) {
 }
 
 // [[Rcpp::export]]
-long long spherical_asd(NumericMatrix P_mat, NumericVector ray_vec) {
-    int n = P_mat.nrow();
-    if (P_mat.ncol() != 3 || ray_vec.size() != 3) {
+long long spherical_asd(NumericMatrix X, NumericVector ray) {
+    int n = X.nrow();
+    if (X.ncol() != 3 || ray.size() != 3) {
         stop("P must be n x 3 and ray must be length 3");
     }
 
     // Convert matrix to std::vector<Point3D>
     std::vector<Point3D> P(n);
     for (int i = 0; i < n; i++) {
-        P[i].x = P_mat(i, 0);
-        P[i].y = P_mat(i, 1);
-        P[i].z = P_mat(i, 2);
-    }
+        if (!(X(i,0)==ray[0] && X(i,1)==ray[1] && X(i,2) == ray[2]))
+            P.push_back({X(i,0), X(i,1), X(i,2)});
+    
 
     // Convert vector to Point3D
-    Point3D ray = { ray_vec[0], ray_vec[1], ray_vec[2] };
+    Point3D rayray = { ray[0], ray[1], ray[2] };
 
-    return spherical_asd(ray, P);
+    return spherical_asd(rayray, P);
 }

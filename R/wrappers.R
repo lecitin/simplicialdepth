@@ -115,7 +115,6 @@ angularsimplicialdepth <- function(X, x = NULL) {
 
     if (d == 2) {
         if (is.null(x)) {
-            # do something (e.g. call your C++ function for global depth)
             result <- circular_asd_all_arcs(X)
             result$depth = result$depth / choose(n, 2)
             result$end_point_depth = result$end_point_depth / choose(n-1, 2)
@@ -144,14 +143,14 @@ angularsimplicialdepth <- function(X, x = NULL) {
         }
     }
     if (d == 3) {
-        if (is.null(x))
+        if (is.null(x)) {
             result <- vapply(seq_len(nrow(X)), function(i) spherical_asd_on_one_point(X, i), numeric(1)) / choose(n-1, 3)
             max_depth_index <- which.max(result)
             return(depth_result(depth=result,
                                 max_depth=result[max_depth_index],
                                 max_point=X[max_depth_index, ],
                                 max_index=max_depth_index))
-
+        }
         if (is.matrix(x)) {
             result <- apply(x, 1, function(row) spherical_asd(X, row)) / choose(n, 3)
             max_depth_index <- which.max(result)
