@@ -170,7 +170,7 @@ long long spherical_asd(NumericMatrix X, NumericVector ray) {
     for (int i = 0; i < n; i++) {
         if (!(X(i,0)==ray[0] && X(i,1)==ray[1] && X(i,2) == ray[2]))
             P.push_back({X(i,0), X(i,1), X(i,2)});
-    
+    }
 
     // Convert vector to Point3D
     Point3D rayray = { ray[0], ray[1], ray[2] };
