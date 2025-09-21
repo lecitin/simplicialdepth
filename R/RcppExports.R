@@ -13,15 +13,15 @@ SDk <- function(Xinput_mat, x_vec, k) {
     .Call(`_simplicialdepth_SDk`, Xinput_mat, x_vec, k)
 }
 
-SDk_parallel <- function(Xinput_mat, q, k) {
-    .Call(`_simplicialdepth_SDk_parallel`, Xinput_mat, q, k)
+SDk_parallel <- function(Xinput_mat, x_vec, k) {
+    .Call(`_simplicialdepth_SDk_parallel`, Xinput_mat, x_vec, k)
 }
 
 simplicial_depth_2d <- function(points_mat, q_vec) {
     .Call(`_simplicialdepth_simplicial_depth_2d`, points_mat, q_vec)
 }
 
-spherical_asd <- function(P_mat, ray_vec) {
-    .Call(`_simplicialdepth_spherical_asd`, P_mat, ray_vec)
+spherical_asd <- function(X, ray) {
+    .Call(`_simplicialdepth_spherical_asd`, X, ray)
 }
 

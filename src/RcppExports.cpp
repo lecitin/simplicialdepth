@@ -47,15 +47,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // SDk_parallel
-long long SDk_parallel(NumericMatrix Xinput_mat, NumericVector q, int k);
-RcppExport SEXP _simplicialdepth_SDk_parallel(SEXP Xinput_matSEXP, SEXP qSEXP, SEXP kSEXP) {
+long long SDk_parallel(NumericMatrix Xinput_mat, NumericVector x_vec, int k);
+RcppExport SEXP _simplicialdepth_SDk_parallel(SEXP Xinput_matSEXP, SEXP x_vecSEXP, SEXP kSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericMatrix >::type Xinput_mat(Xinput_matSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type q(qSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type x_vec(x_vecSEXP);
     Rcpp::traits::input_parameter< int >::type k(kSEXP);
-    rcpp_result_gen = Rcpp::wrap(SDk_parallel(Xinput_mat, q, k));
+    rcpp_result_gen = Rcpp::wrap(SDk_parallel(Xinput_mat, x_vec, k));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -72,14 +72,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // spherical_asd
-long long spherical_asd(NumericMatrix P_mat, NumericVector ray_vec);
-RcppExport SEXP _simplicialdepth_spherical_asd(SEXP P_matSEXP, SEXP ray_vecSEXP) {
+long long spherical_asd(NumericMatrix X, NumericVector ray);
+RcppExport SEXP _simplicialdepth_spherical_asd(SEXP XSEXP, SEXP raySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericMatrix >::type P_mat(P_matSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type ray_vec(ray_vecSEXP);
-    rcpp_result_gen = Rcpp::wrap(spherical_asd(P_mat, ray_vec));
+    Rcpp::traits::input_parameter< NumericMatrix >::type X(XSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type ray(raySEXP);
+    rcpp_result_gen = Rcpp::wrap(spherical_asd(X, ray));
     return rcpp_result_gen;
 END_RCPP
 }

@@ -95,11 +95,8 @@ long long SDk(NumericMatrix Xinput_mat, NumericVector x_vec, int k) {
 
     // Convert matrix to std::vector<Point3D>
     std::vector<Point3D> Xinput(n);
-    for (int i = 0; i < n; i++) {
-        Xinput[i].x = Xinput_mat(i, 0);
-        Xinput[i].y = Xinput_mat(i, 1);
-        Xinput[i].z = Xinput_mat(i, 2);
-    }
+    for (int i = 0; i < n; i++)
+        Xinput.push_back({Xinput_mat(i,0), Xinput_mat(i,1), Xinput_mat(i,2)});
 
     // Convert vector to Point3D
     Point3D x = { x_vec[0], x_vec[1], x_vec[2] };
@@ -109,6 +106,7 @@ long long SDk(NumericMatrix Xinput_mat, NumericVector x_vec, int k) {
 
 long long SDk_parallel(const std::vector<Point3D>& Xinput, const Point3D& x, int k) {
     int n = Xinput.size();
+    if (n < k) return 0LL;
     std::vector<Point3D> X;
     X.reserve(n);
     for (const auto& p : Xinput) {
@@ -206,14 +204,18 @@ long long SDk_parallel(const std::vector<Point3D>& Xinput, const Point3D& x, int
 }
 
 // [[Rcpp::export]]
-long long SDk_parallel(NumericMatrix Xinput_mat, NumericVector q, int k) {
+long long SDk_parallel(NumericMatrix Xinput_mat, NumericVector x_vec, int k) {
     int n = Xinput_mat.nrow();
-    if (Xinput_mat.ncol() != 3 || q.size() != 3) {
-        stop("Xinput must be n x 3 and x must be length 3");
+    if (n < k) return 0LL;
+
+    if (Xinput_mat.ncol() != 3 || x_vec.size() != 3) {
+        stop("Xinput must be n x 3 and x must be length of 3");
     }
 
     // Convert matrix to std::vector<Point3D>
     std::vector<Point3D> Xinput(n);
+    // for (int i = 0; i < n; i++)
+    //     Xinput.push_back({Xinput_mat(i,0), Xinput_mat(i,1), Xinput_mat(i,2)});
     for (int i = 0; i < n; i++) {
         Xinput[i].x = Xinput_mat(i, 0);
         Xinput[i].y = Xinput_mat(i, 1);
@@ -221,7 +223,7 @@ long long SDk_parallel(NumericMatrix Xinput_mat, NumericVector q, int k) {
     }
 
     // Convert vector to Point3D
-    Point3D x = { q[0], q[1], q[2] };
+    Point3D x = { x_vec[0], x_vec[1], x_vec[2] };
 
     return SDk_parallel(Xinput, x, k);
 }

@@ -112,9 +112,11 @@ long long circular_asd_01(Point2D ray, const std::vector<Point2D>& points) {
 long long circular_asd(NumericMatrix X, NumericVector ray) {
     int n = X.nrow();
     std::vector<Point2D> P(n);
-    for (int i=0; i<n; i++) {
-        if (!(X(i,0)==ray[0] && X(i,1)==ray[1]))
-            P.push_back({X(i,0), X(i,1)});
+    // for (int i=0; i<n; i++)
+    //     P.push_back({X(i,0), X(i,1)});
+    for (int i = 0; i < n; i++) {
+        P[i].x = X(i, 0);
+        P[i].y = X(i, 1);
     }
     Point2D xx = {ray[0], ray[1]};
     return circular_asd_01(xx, P);

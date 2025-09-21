@@ -8,7 +8,7 @@ using namespace Rcpp;
 // The main algorithm for fast 3D angular simplicial depth
 long long spherical_asd(Point3D ray, const std::vector<Point3D>& P) {
     int n = P.size();
-    if (n < 3) return 0;
+    if (n < 3) return 0LL;
 
     // Step 1: Project points to a unit sphere.
     std::vector<Point3D> P_prime;
@@ -161,15 +161,20 @@ long long spherical_asd(Point3D ray, const std::vector<Point3D>& P) {
 // [[Rcpp::export]]
 long long spherical_asd(NumericMatrix X, NumericVector ray) {
     int n = X.nrow();
+    // if (n < 3) return 0LL;
+    if (n < 3) stop("n must be at least 3");
     if (X.ncol() != 3 || ray.size() != 3) {
-        stop("P must be n x 3 and ray must be length 3");
+        stop("P must be n x 3 and ray must be of length 3");
     }
 
     // Convert matrix to std::vector<Point3D>
     std::vector<Point3D> P(n);
+    // for (int i = 0; i < n; i++)
+    //     P.push_back({X(i,0), X(i,1), X(i,2)});
     for (int i = 0; i < n; i++) {
-        if (!(X(i,0)==ray[0] && X(i,1)==ray[1] && X(i,2) == ray[2]))
-            P.push_back({X(i,0), X(i,1), X(i,2)});
+        P[i].x = X(i, 0);
+        P[i].y = X(i, 1);
+        P[i].z = X(i, 2);
     }
 
     // Convert vector to Point3D

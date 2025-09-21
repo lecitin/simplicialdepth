@@ -20,6 +20,11 @@ input_check <- function(X, x=NULL) {
     }
 }
 
+remove_x_from_X <- function(X, x) {
+    keep <- rowSums(X == matrix(x, nrow(X), ncol(X), byrow = TRUE)) != ncol(X)
+    return(X[keep, ])
+}
+
 #' Constructor for depth_result objects
 #'
 #' @param depth Numeric vector of depths.
@@ -110,8 +115,6 @@ angularsimplicialdepth <- function(X, x = NULL) {
         if (n < d)
             stop("X must have at least as many rows as columns.")
     }
-    norms <- sqrt(rowSums(X^2))
-    X <- X / norms
 
     if (d == 2) {
         if (is.null(x)) {
@@ -127,7 +130,13 @@ angularsimplicialdepth <- function(X, x = NULL) {
                                 max_index=max_depth_index))
         } else {
             if (is.matrix(x)) {
-                result <- apply(x, 1, function(row) circular_asd(X, row)) / choose(n, 2)
+                result <- apply(x, 1, function(row) {
+                    X_new <- remove_x_from_X(X, row)
+                    if (nrow(X_new) >= 2) {
+                        circular_asd(X_new, row) / choose(nrow(X_new), 2)
+                    } else {
+                        return(0)
+                    }})
                 max_depth_index <- which.max(result)
                 return(depth_result(depth=result,
                                     max_depth=result[max_depth_index],
@@ -135,7 +144,12 @@ angularsimplicialdepth <- function(X, x = NULL) {
                                     max_index=max_depth_index))
             }
             # The only option left is that x is a numeric vector of proper length
-            result <- circular_asd(X, x) / choose(n, 2)
+            X_new <- remove_x_from_X(X, x)
+            if (nrow(X_new) >= 2) {
+                result <- circular_asd(X_new, x) / choose(nrow(X_new), 2)
+            } else {
+                result <- 0
+            }
             return(depth_result(depth=c(result),
                                 max_depth=result,
                                 max_point=x,
@@ -152,14 +166,29 @@ angularsimplicialdepth <- function(X, x = NULL) {
                                 max_index=max_depth_index))
         }
         if (is.matrix(x)) {
-            result <- apply(x, 1, function(row) spherical_asd(X, row)) / choose(n, 3)
+            # result <- apply(x, 1, function(row) spherical_asd(X, row)) / choose(n, 3)
+            result <- apply(x, 1, function(row) {
+                X_new <- remove_x_from_X(X, row)
+                if (nrow(X_new) >= 3) {
+                    spherical_asd(X_new, row) / choose(nrow(X_new), 3)
+                } else {
+                    return(0)
+                }})
             max_depth_index <- which.max(result)
             return(depth_result(depth=result,
                                 max_depth=result[max_depth_index],
                                 max_point=x[max_depth_index, ],
                                 max_index=max_depth_index))
         }
-        result <- spherical_asd(X, x) / choose(n, 3)
+
+
+        X_new <- remove_x_from_X(X, x)
+
+        if (nrow(X_new) >= 3) {
+            result <- spherical_asd(X_new, x) / choose(nrow(X_new), 3)
+        } else {
+            result <- 0
+        }
         return(depth_result(depth=c(result),
                             max_depth=result,
                             max_point=x,
@@ -215,6 +244,8 @@ sdk_on_one_point <- function(X, i, k) {
 simplicialdepth <- function(X, x=NULL) {
     input_check(X, x)
 
+    # X <- remove_x_from_X(X, x)
+
     n <- nrow(X)
     d <- ncol(X)
 
@@ -236,7 +267,13 @@ simplicialdepth <- function(X, x=NULL) {
                                 max_index=max_depth_index))
         }
         if (is.matrix(x)) {
-            result <- apply(x, 1, function(row) simplicial_depth_2d(X, row)) / choose(n, 3)
+            result <- apply(x, 1, function(row) {
+                X_new <- remove_x_from_X(X, row)
+                if (nrow(X_new) >= 3) {
+                    simplicial_depth_2d(X_new, row) / choose(nrow(X_new), 3)
+                } else {
+                    return(0)
+                }})
             max_depth_index <- which.max(result)
             return(depth_result(depth=result,
                                 max_depth=result[max_depth_index],
@@ -244,7 +281,12 @@ simplicialdepth <- function(X, x=NULL) {
                                 max_index=max_depth_index))
         }
         # The only remaining option is that x is a numeric vector
-        result <- simplicial_depth_2d(X,x) / choose(n, 3)
+        X_new <- remove_x_from_X(X, x)
+        if (nrow(X_new) >= 3) {
+            result <- simplicial_depth_2d(X,x) / choose(n, 3)
+        } else {
+            result <- 0
+        }
         return(depth_result(depth=c(result),
                             max_depth=result,
                             max_point=x,
@@ -260,14 +302,25 @@ simplicialdepth <- function(X, x=NULL) {
                                 max_index=max_depth_index))
         }
         if (is.matrix(x)) {
-            result <- apply(x, 1, function(row) SDk_parallel(X, row, 4)) / choose(n, 4)
+            result <- apply(x, 1, function(row) {
+                X_new <- remove_x_from_X(X, row)
+                if (nrow(X_new) >= 4) {
+                    SDk_parallel(X_new, row, 4) / choose(nrow(X_new), 4)
+                } else {
+                    return(0)
+                }})
             max_depth_index <- which.max(result)
             return(depth_result(depth=result,
                                 max_depth=result[max_depth_index],
                                 max_point=x[max_depth_index, ],
                                 max_index=max_depth_index))
         }
-        result <- SDk_parallel(X, x, 4) / choose(n, 4)
+        X_new <- remove_x_from_X(X, x)
+        if (nrow(X_new) >= 4) {
+            result <- SDk_parallel(X_new, x, 4) / choose(nrow(X_new), 4)
+        } else {
+            return(0)
+        }
         return(depth_result(depth=c(result),
                             max_depth=result,
                             max_point=x,
@@ -321,18 +374,6 @@ khulldepth <- function(X, x=NULL, k) {
     if (k <= d)
         stop("k must be bigger than the number of columns of X.")
 
-    # if (k <= d || n < k) {
-    #     if (is.null(x)) {
-    #         if (n < k+1)
-    #             return(depth_result(depth=numeric(n), max_depth=0, max_point=X[1,], max_index=1))
-    #     } else { 
-    #         if (is.matrix(x))
-    #             return(depth_result(depth=numeric(nrow(x)), max_depth=0, max_point=X[1,], max_index=1))
-    #         # The only option left is that x is a vector
-    #         return(depth_result(depth=numeric(1), max_depth=0, max_point=X[1,], max_index=1))
-    #     }
-    # }
-
     if (is.null(x)) {
         result <- vapply(seq_len(nrow(X)), function(i) sdk_on_one_point(X, i, k), numeric(1)) / choose(n-1, k)
         max_depth_index <- which.max(result)
@@ -342,7 +383,13 @@ khulldepth <- function(X, x=NULL, k) {
                             max_index=max_depth_index))
     }
     if (is.matrix(x)) {
-        result <- apply(x, 1, function(row) SDk_parallel(X, row, k)) / choose(n, k)
+        result <- apply(x, 1, function(row) {
+            X_new <- remove_x_from_X(X, x)
+            if (nrow(X_new) >= k) {
+                SDk_parallel(X_new, row, k) / choose(nrow(X_new), k)
+            } else {
+                return(0)
+            }})
         max_depth_index <- which.max(result)
         return(depth_result(depth=result,
                             max_depth=result[max_depth_index],
@@ -350,7 +397,12 @@ khulldepth <- function(X, x=NULL, k) {
                             max_index=max_depth_index))
     }
     # The only option left is that x is a numeric vector of length equal to d
-    result <- SDk_parallel(X, x, k) / choose(n, k)
+    X_new <- remove_x_from_X(X, x)
+    if (nrow(X_new) >= k) {
+        result <- SDk_parallel(X_new, x, k) / choose(nrow(X_new), k)
+    } else {
+        result <- 0
+    }
     return(depth_result(depth=c(result),
                         max_depth=result,
                         max_point=x,
